@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.TransactionMapper">
+
+	<insert id="insert">
+		INSERT INTO
+		transaction_table(id,creator,created_time,finish_time,is_done,flag, type, data,tx_hash)
+		VALUES(#{id},#{from}, #{createdTime},
+		#{finishTime},#{isDone},#{flag},#{type},#{data},#{txHash})
+	</insert>
+	
+	<select id="select" resultMap="transaction">
+		SELECT *
+		FROM transaction_table
+		<where>
+			<if test="id != null">AND id=#{id}</if>
+			<if test="from != null">AND creator=#{from}</if>
+			<if test="type != null">AND type=#{type}</if>
+			<if test="isDone != null">AND is_done=#{isDone}</if>
+		</where>
+	</select>
+	
+	<update id="updateById">
+		UPDATE transaction_table
+		<set>
+			<if test="isDone != null">is_done=#{isDone},</if>
+			<if test="flag != null">flag=#{flag},</if>
+			<if test="finishTime != null">finish_time=#{finishTime},</if>
+		</set>
+		WHERE id=#{id}
+	</update>
+	
+	<update id="update">
+		UPDATE transaction_table
+		<set>
+			<if test="transaction.isDone != null">is_done=#{transaction.isDone},</if>
+			<if test="transaction.flag != null">flag=#{transaction.flag},</if>
+			<if test="transaction.finishTime != null">finish_time=#{transaction.finishTime},</if>
+		</set>
+		<where>
+			<if test="condition.id != null"> AND id=#{condition.id}</if>
+		</where>
+	</update>
+	
+	<resultMap id="transaction" type="Transaction">
+		<id property="id" column="id"/>
+		<result property="from" column="creator"/>
+		<result property="createdTime" column="created_time"/>
+		<result property="finishTime" column="finish_time"/>
+		<result property="isDone" column="is_done"/>
+		<result property="flag" column="flag"/>
+		<result property="type" column="type"/>
+		<result property="data" column="data"/>
+		<result property="txHash" column="tx_hash"/>
+	</resultMap>
+
+</mapper>

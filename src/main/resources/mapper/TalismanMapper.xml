@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.TalismanMapper">
+
+	<insert id="insert">
+		INSERT INTO
+		talisman_table(abstract_id,
+		project_id,work_id, talisman_function, creator, img, total_supply,
+		monthly_payment,yearly_payment, fully_payment, file_hash,
+		contract_address)
+		VALUES(#{abstractId},#{projectId},#{tokenID},#{function},#{creator.openId},#{imgHash},#{totalSupply},#{accessPaymentPlan.monthlyPayment},#{accessPaymentPlan.yearlyPayment},#{accessPaymentPlan.fullyPayment},#{fileHash},#{contractAddress})
+	</insert>
+
+	<select id="selectById" resultMap="talisman">
+		SELECT *
+		FROM talisman_view
+		WHERE work_id=#{id}
+	</select>
+
+	<select id="select" resultMap="talisman">
+		SELECT *
+		FROM talisman_view
+		<where>
+			<if test="creator != null  &amp;&amp; creator.openId != null"> AND creator=#{creator.openId}</if>
+			<if test="creator != null  &amp;&amp; creator.blockChainAddress != null">AND block_chain_address=#{creator.blockChainAddress}</if>
+			<if test="creator != null  &amp;&amp; creator.blockChainName != null">AND block_chain_name=#{creator.blockChainName}</if>
+			<if test="tokenID!=null">AND work_id=#{tokenID}</if>
+			<if test="abstractId != null">AND abstract_id=#{abstractId}</if>
+			<if test="projectId != null">AND project_id=#{projectId}</if>
+		</where>
+	</select>
+
+	<resultMap id="talisman" type="TalismanIPToken">
+		<id property="tokenID" column="work_id" />
+		<result property="abstractId" column="abstract_id" />
+		<result property="projectId" column="project_id" />
+		<result property="function" column="talisman_function" />
+		<result property="totalSupply" column="total_supply" />
+		<result property="remianSupply" column="remian_supply" />
+		<result property="fileHash" column="file_hash" />
+		<result property="imgHash" column="img" />
+		<result property="contractAddress" column="contract_address"></result>
+		<association property="creator" javaType="User">
+			<id property="openId" column="creator" />
+			<result property="nickName" column="nick_name" />
+			<result property="avatarUrl" column="avatar_url" />
+			<result property="blockChainAddress"
+				column="block_chain_address" />
+			<result property="blockChainName" column="block_chain_name" />
+		</association>
+		<association property="accessPaymentPlan"
+			javaType="AccessPaymentPlan">
+			<result property="monthlyPayment" column="monthly_payment" />
+			<result property="yearlyPayment" column="yearly_payment" />
+			<result property="fullyPayment" column="fully_payment" />
+		</association>
+
+	</resultMap>
+
+</mapper>

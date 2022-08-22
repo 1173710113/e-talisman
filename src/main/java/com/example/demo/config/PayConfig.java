@@ -1,0 +1,13 @@
+package com.example.demo.config;
+
+
+import org.springframework.context.annotation.Configuration;
+
+import cn.felord.payment.autoconfigure.EnableMobilePay;
+
+@EnableMobilePay
+@Configuration
+public class PayConfig {
+	
+
+}

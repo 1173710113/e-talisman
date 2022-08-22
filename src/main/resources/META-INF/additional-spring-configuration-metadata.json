@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "eth.config.gas-price",
+    "type": "java.lang.String",
+    "description": "A description for 'eth.config.gas-price'"
+  },
+  {
+    "name": "eth.config.gas-limit",
+    "type": "java.lang.String",
+    "description": "A description for 'eth.config.gas-limit'"
+  }
+]}

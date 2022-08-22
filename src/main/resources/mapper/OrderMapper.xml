@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.OrderMapper">
+
+	<insert id="insert">
+		INSERT INTO
+		order_table(id, talisman_id,art_id,is_done,flag,total, description, created_time,finish_time,buyer)
+		VALUES(#{id},#{talismanId}, #{artId}, #{isDone}, #{flag},#{total},#{description},#{createdTime},#{finishTime},#{buyer.openId})
+	</insert>
+	
+	<update id="updateById">
+		UPDATE order_table
+		<set>
+			<if test="isDone != null">is_done=#{isDone},</if>
+			<if test="flag != null">flag=#{flag},</if>
+			<if test="finishTime != null">finish_time=#{finishTime},</if>
+		</set>
+		WHERE id=#{id}
+	</update>
+	
+	<select id="selectById" resultMap="order">
+		SELECT 
+		o.id,o.talisman_id,o.art_id,o.is_done,o.flag,o.total,o.description,o.created_time,o.finish_time,o.buyer,u.nick_name,u.avatar_url,block_chain_name,block_chain_address
+		FROM order_table o, user_table u
+		WHERE o.id=#{id} AND u.open_id=o.buyer
+	</select>
+	
+	<resultMap id="order" type="Order">
+		<id property="id" column="id"/>
+		<result property="talismanId" column="talisman_id"/>
+		<result property="artId" column="art_id"/>
+		<result property="isDone" column="is_done"/>
+		<result property="flag" column="flag"/>
+		<result property="total" column="total"/>
+		<result property="description" column="description"/>
+		<result property="createdTime" column="created_time"/>
+		<result property="finishTime" column="finish_time"/>
+		<association column="buyer" property="buyer" javaType="User">
+			<id property="openId" column="buyer"/>
+			<result property="nickNama" column="nick_name"/>
+			<result property="avatarUrl" column="avatar_url"/>
+			<result property="blockChainName" column="block_chain_name"/>
+			<result property="blockChainAddress" column="block_chain_address"/>
+		</association>
+		</resultMap>
+	
+	
+
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.UserMapper">
+
+	<insert id="insert">
+		INSERT INTO user_table(open_id, nick_name,
+		avatar_url, private_key, block_chain_address, block_chain_name)
+		VALUES(#{openId},#{nickName},#{avatarUrl}, #{privateKey},#{blockChainAddress},#{blockChainName})
+	</insert>
+	
+	<select id="selectByOpenId" resultMap="user">
+		SELECT open_id,nick_name,avatar_url,private_key, block_chain_address,block_chain_name
+		FROM user_table
+		WHERE open_id=#{openId}
+	</select>
+	
+	<select id="select" resultMap="user">
+		SELECT open_id,nick_name,avatar_url,private_key, block_chain_address,block_chain_name
+		FROM user_table
+		<where>
+			<if test="openId != null"> AND open_id=#{openId}</if>
+			<if test="privateKey != null">AND private_key=#{privateKey}</if>
+			<if test="blockChainAddress != null">AND block_chain_address=#{blockChainAddress}</if>
+		</where>
+	</select>
+	
+	<resultMap id="user" type="User">
+		<id property="openId" column="open_id"/>
+		<result property="nickName" column="nick_name"/>
+		<result property="avatarUrl" column="avatar_url"/> 
+		<result property="privateKey" column="private_key"/>
+		<result property="blockChainAddress" column="block_chain_address"/>
+		<result property="blockChainName" column="block_chain_name"/>
+	</resultMap>
+
+</mapper>

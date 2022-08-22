@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.ETalismanMapper">
+
+	<insert id="insert" useGeneratedKeys="true"
+		keyProperty="etalismanId" keyColumn="etalisman_id">
+		INSERT INTO
+		etalisman_table(talisman_id,art_id,owner,expire_time, talisman_commodity_id,art_commodity_id)
+		VALUES(#{talismanId},#{artId},#{owner.openId},#{expireTime},#{talismanCommodityId},#{artCommodityId})
+	</insert>
+
+	<update id="updateById">
+		UPDATE etalisman_table
+		<set>
+			<if test="talismanId != null">talisman_id=#{talismanId},</if>
+			<if test="artId != null">art_id=#{artId},</if>
+			<if test="expireTime != null">expire_time=#{expireTime},</if>
+			<if test="talismanCommodityId != null">talisman_commodity_id = #{talismanCommodityId},</if>
+			<if test="artCommodityId != null">art_commodity_id = #{artCommodityId},</if>
+			<if test="owner != null &amp;&amp; owner.openId != null">owner = #{owner.openId},</if>
+		</set>
+		WHERE etalisman_id=#{etalismanId}
+	</update>
+
+	<select id="select" resultMap="etalisman">
+		SELECT *
+		FROM etalisman_view
+		<where>
+			<if test="owner != null &amp;&amp; owner.openId != null">AND owner = #{owner.openId}</if>
+			<if test="etalismanId != null">AND etalisman_id = #{etalismanId}</if>
+		</where>
+	</select>
+	
+	<select id="selectById" resultMap="etalisman">
+		SELECT * 
+		FROM  etalisman_view
+		WHERE etalisman_id=#{id}
+	</select>
+
+	<resultMap id="etalisman" type="ETalisman">
+		<id property="etalismanId" column="etalisman_id" />
+		<result property="talismanId" column="talisman_id" />
+		<result property="artId" column="art_id" />
+		<result property="talismanCommodityId"
+			column="talisman_commodity_id" />
+		<result property="artCommodityId" column="art_commodity_id" />
+		<result property="expireTime" column="expire_time" />
+		<association property="owner" javaType="User">
+			<id property="openId" column="owner" />
+			<result property="nickName" column="nick_name" />
+			<result property="avatarUrl" column="avatar_url" />
+			<result property="blockChainAddress"
+				column="block_chain_address" />
+			<result property="blockChainName" column="block_chain_name" />
+		</association>
+	</resultMap>
+
+
+</mapper>
